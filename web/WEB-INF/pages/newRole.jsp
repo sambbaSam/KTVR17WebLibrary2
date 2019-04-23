@@ -20,5 +20,6 @@
             <br>
             <input type="submit" value="Добавить">
         </form><br>
+        <p><button><a href="welcome">Home</a></button></p>
     </body>
 </html>

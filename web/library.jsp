@@ -21,12 +21,13 @@
                 </c:forEach>
             </select>
                 <h2>Список читателей</h2>
-            <select name="selectedReader">
-                <c:forEach var="reader" items="${listReader}">
-                    <option value="${reader.id}">${reader.name} ${reader.surname}</option>
+            <select name="selectedUser">
+                <c:forEach var="user" items="${listUser}">
+                    <option value="${user.id}">${user.name} ${user.surname}</option>
                 </c:forEach>
             </select>
                 <button type="submit" name="takeBook">Выдать книгу</button>
         </form>
+        <p><button><a href="welcome">Home</a></button></p>
     </body>
 </html>

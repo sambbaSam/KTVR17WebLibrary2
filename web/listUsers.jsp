@@ -1,9 +1,3 @@
-<%-- 
-    Document   : istReader
-    Created on : Oct 5, 2018, 9:11:16 AM
-    Author     : Melnikov
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,9 +9,10 @@
     <body>
         <h1>Список читателей</h1>
         <ul>
-            <c:forEach var="reader" items="${listReader}">
-                <li>${reader.name} ${reader.surname}</li>
+            <c:forEach var="user" items="${listUsers}">
+                <li>${user.name} ${user.surname}</li>
             </c:forEach>
         </ul>
+        <p><button><a href="welcome">Home</a></button></p>
     </body>
 </html>

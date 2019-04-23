@@ -17,9 +17,10 @@
         ${info}
             <ul>
                 <c:forEach var="history" items="${takeBooks}">
-                    <li>Книга: ${history.book.nameBook} взята: ${history.reader.name} ${history.reader.surname}
+                    <li>Книга: ${history.book.nameBook} взята: ${history.user.name} ${history.user.surname}
                         <a href="returnBook?historyId=${history.id}"> Вернуть книгу</a></li>
                 </c:forEach> 
             </ul>
+            <p><button><a href="welcome">Home</a></button></p>
     </body>
 </html>

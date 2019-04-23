@@ -12,6 +12,6 @@
             <br>
             <input type="submit" value="Войти" id="button">
         </form><br><br>
-        <a href="newReader">Зарегистрироваться</a>
+        <a href="newUser">Зарегистрироваться</a>
         <script src="${pageContext.request.contextPath}/js/showLogin.js"></script>
    

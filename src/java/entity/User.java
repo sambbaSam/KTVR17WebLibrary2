@@ -149,7 +149,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Reader{" + "id=" + id + ", name=" + name + ", surname=" + surname + ", phone=" + phone + ", city=" + city + ", login=" + login + ", password=" + password + ", salts=" + salts + '}';
+        return  "id=" + id + ", name=" + name + ", surname=" + surname + ", phone=" + phone + ", city=" + city + ", login=" + login + ", password=" + password + ", salts=" + salts + '}';
     }
 
    

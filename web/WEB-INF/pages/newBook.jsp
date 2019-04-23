@@ -14,6 +14,7 @@
         <title>Новая книга</title>
     </head>
     <body>
+        
         <h1>Добавляем в библиотеку новую книгу</h1>
         <form action="addBook" method="POST" name="form1" onsubmit="return validate();" id="form1">
              Название:<br>
@@ -29,7 +30,7 @@
             <br>
             <input type="submit" value="Добавить">
         </form><br>
-        
+        <p><button><a href="welcome">Home</a></button></p>
         <script src="${pageContext.request.contextPath}/js/newBook.js"></script>
     </body>
 </html>

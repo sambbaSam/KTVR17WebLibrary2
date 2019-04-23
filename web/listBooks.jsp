@@ -24,5 +24,6 @@
                 </li>
             </c:forEach>
         </ul>
+        <p><button><a href="welcome">Home</a></button></p>
     </body>
 </html>
