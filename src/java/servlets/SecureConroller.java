@@ -27,8 +27,8 @@ import util.PageReturner;
     "/logout",
     "/showLogin",
     "/newUser",
-    "/addUser",
-    "/welcome",
+    "/addUser"
+//    "/welcome",
 })
 public class SecureConroller extends HttpServlet {
    
@@ -104,9 +104,9 @@ public class SecureConroller extends HttpServlet {
             if(encriptPass.equals(regUser.getPassword())){
                 session = request.getSession(true);
                 session.setAttribute("regUser", regUser);
-                request.setAttribute("info", "Привет "+regUser.getName()
+                request.setAttribute("info", "Привет " + regUser.getName()
                         +"! Вы вошли в систему.");
-                request.getRequestDispatcher(PageReturner.getPage("welcome"))
+                request.getRequestDispatcher("/welcome")
                         .forward(request, response);
                 break;
             }

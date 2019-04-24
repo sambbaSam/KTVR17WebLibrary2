@@ -1,8 +1,3 @@
-<%-- 
-    Document   : editUserRoles
-    Created on : Nov 7, 2018, 12:35:23 PM
-    Author     : Melnikov
---%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

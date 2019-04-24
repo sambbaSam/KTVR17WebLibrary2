@@ -29,14 +29,14 @@ import util.PageReturner;
 @WebServlet(name = "AdminController", urlPatterns = {
     "/newBook",
     "/addBook",
-    "/showBooks",
+   // "/showBooks",// для пользователя
     "/showUsers",
     "/library",
     "/takeBook",
     "/showTakeBook",
     "/returnBook",
     "/deleteBook",
-     "/showUserRoles",
+    "/showUserRoles",
     "/changeUserRole"
 })
 public class AdminController extends HttpServlet {
@@ -54,6 +54,7 @@ public class AdminController extends HttpServlet {
         HttpSession session = request.getSession(false);
         SecureLogic sl = new SecureLogic();
         User regUser = null;
+        //-----------------------------защита ресурса - проверка, что вошел ADMIN
         if(session != null){
             try {
                 regUser = (User) session.getAttribute("regUser");
@@ -61,7 +62,7 @@ public class AdminController extends HttpServlet {
                 regUser = null;
             }
         }
-         if(regUser == null){
+        if(regUser == null){
                 request.setAttribute("info", "У вас нет прав доступа к ресурсу");
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
                         .forward(request, response);
@@ -72,13 +73,10 @@ public class AdminController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
                         .forward(request, response);
                 return;
-            }     
+            } 
+        //----------------------------------------------------------
          String path = request.getServletPath();
-            switch (path) {
-                case "/welcome":
-                request.getRequestDispatcher(PageReturner.getPage("welcome"))
-                        .forward(request, response);
-                break;    
+        switch (path) {  
         case "/newBook":
             request.getRequestDispatcher(PageReturner.getPage("newBook")).forward(request, response);
             break;
@@ -94,13 +92,13 @@ public class AdminController extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
                 break;
             }
-        case "/showBooks":{
-            List<Book> listBooks = bookFacade.findActived(true);
-            request.setAttribute("role", sl.getRole(regUser));
-            request.setAttribute("listBooks", listBooks);
-            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-                break;
-            }
+//        case "/showBooks":{
+//            List<Book> listBooks = bookFacade.findActived(true);
+//            request.setAttribute("role", sl.getRole(regUser));
+//            request.setAttribute("listBooks", listBooks);
+//            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
+//                break;
+//            }
         case "/showUsers":
             List<User> listUsers = userFacade.findAll();
             request.setAttribute("listUsers", listUsers);
@@ -201,6 +199,7 @@ public class AdminController extends HttpServlet {
                     .forward(request, response);
             break;      
             default:
+            request.setAttribute("info", "Нат такой страницы");
             request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
             break;
     }
