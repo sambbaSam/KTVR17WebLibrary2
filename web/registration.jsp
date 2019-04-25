@@ -3,10 +3,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="css/library.css" >
         <title>Новый читатель</title>
     </head>
     <body>
-        <h1>Добавляем в библиотеку нового читателя</h1>
+        <div class ="colorBack">
+        <h3>Регистрация нового читателя</h3>
         <form action="addUser" method="POST" name="form1" id="_form1">
              Имя:<br>
             <input type="text" name="name"><br>
@@ -27,7 +29,8 @@
             <input type="password" name="password2"><br>
             <br>
             <input type="submit" value="Добавить">
-        </form><br>
+        </form>
         <p><button><a href="welcome">Home</a></button></p>
+        </div>
     </body>
 </html>

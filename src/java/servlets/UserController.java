@@ -18,7 +18,6 @@ import util.PageReturner;
 
 @WebServlet(name = "UserController", urlPatterns = {
 "/showBooks"
-
 })
 public class UserController extends HttpServlet {
 @EJB BookFacade bookFacade;
@@ -69,7 +68,7 @@ public class UserController extends HttpServlet {
                 break;
                 default:
                 request.setAttribute("info", "Нат такой страницы");
-                request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
+                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
             break;
             }          
     }

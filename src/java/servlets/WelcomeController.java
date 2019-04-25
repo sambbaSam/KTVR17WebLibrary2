@@ -48,7 +48,7 @@ public class WelcomeController extends HttpServlet {
         }
         if (regUser == null) {
             request.setAttribute("info", "Войти или зарегистрироваться");
-            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+            request.getRequestDispatcher(PageReturner.getPage("index"))
                         .forward(request, response);
             return;
         }
@@ -57,14 +57,19 @@ public class WelcomeController extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
                         .forward(request, response);
             return;
-        } else if (sl.isRole(regUser, "USER")) {
-            request.setAttribute("info", "Вы вошли как ");
+        } else if (sl.isRole(regUser, "MANAGER")) {
+            request.setAttribute("info", "Вы вошли как "  + regUser.getName());
+            request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
+                        .forward(request, response);
+            return;
+        }else if (sl.isRole(regUser, "USER")) {
+            request.setAttribute("info", "Вы вошли как "  + regUser.getName());
             request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
                         .forward(request, response);
             return;
         } else {
             request.setAttribute("info", "Войти или зарегистрироваться");
-            request.getRequestDispatcher(PageReturner.getPage("welcome"))
+            request.getRequestDispatcher(PageReturner.getPage("index"))
                         .forward(request, response);
             return;
         }

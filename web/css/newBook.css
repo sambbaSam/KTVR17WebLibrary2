@@ -1,6 +1,13 @@
+h1{
+    color:black;
+}
+h2{
+    color:fuchsia;
+}
 h3{
     color:red;
 }
+
 .invalid{
     border: 1px solid #f60;
 }

@@ -20,18 +20,17 @@ import util.EncriptPass;
 import util.PageReturner;
 
 /**
- доступно для всех, защиты нет
+ * доступно для всех, защиты нет
  */
-@WebServlet(loadOnStartup = 1,name = "SecureController", urlPatterns = {
+@WebServlet(loadOnStartup = 1, name = "SecureController", urlPatterns = {
     "/login",
     "/logout",
     "/showLogin",
     "/newUser",
     "/addUser"
-//    "/welcome",
 })
 public class SecureConroller extends HttpServlet {
-   
+
     @EJB RoleFacade roleFacade;
     @EJB UserFacade userFacade;
     @EJB UserRolesFacade userRolesFacade;
@@ -39,28 +38,33 @@ public class SecureConroller extends HttpServlet {
     @Override
     public void init() throws ServletException {
         List<User> listUsers = userFacade.findAll();
-        if(listUsers.isEmpty()){
+        if (listUsers.isEmpty()) {
             EncriptPass ep = new EncriptPass();
             String salts = ep.createSalts();
             String encriptPass = ep.setEncriptPass("admin", salts);
-            User user = new User("Сидор", "Сидоров", 
-                 "454545454", "К-Ярве", "admin", encriptPass, salts);
+            User user = new User("Сидор", "Сидоров",
+                        "454545454", "К-Ярве", "admin", encriptPass, salts);
             userFacade.create(user);
             Role role = new Role();
-            role.setName("ADMIN");
+            role.setName("ADMIN");  //присвоение роли админу - АДМИН
             roleFacade.create(role);
             UserRoles ur = new UserRoles();
             ur.setUser(user);
             ur.setRole(role);
             userRolesFacade.create(ur);
-            role.setName("USER");
+            role.setName("MANAGER"); //присвоение роли админу - MANAGER
+            roleFacade.create(role);
+            ur.setUser(user);
+            ur.setRole(role);
+            userRolesFacade.create(ur);
+            role.setName("USER");   //присвоение роли админу - USER
             roleFacade.create(role);
             ur.setUser(user);
             ur.setRole(role);
             userRolesFacade.create(ur);
         }
     }
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -71,89 +75,96 @@ public class SecureConroller extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+                throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF8");
         HttpSession session = request.getSession(false);
         User regUser = null;
-        if(session != null){
+        if (session != null) {
             try {
                 regUser = (User) session.getAttribute("regUser");
             } catch (Exception e) {
                 regUser = null;
             }
         }
-        EncriptPass ep = new EncriptPass(); 
+        EncriptPass ep = new EncriptPass();
         String salts = "";
         SecureLogic sl = new SecureLogic();
         String path = request.getServletPath();
-        if(null != path)
+        if (null != path) {
             switch (path) {
-        case "/login":
-            String login = request.getParameter("login");
-            String password = request.getParameter("password");
-            request.setAttribute("info", "Нет такого пользователя!");
-            regUser = userFacade.findByLogin(login);
-            if(regUser == null){
-                request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                    .forward(request, response);
-                break;
+                case "/login":
+                    String login = request.getParameter("login");
+                    String password = request.getParameter("password");
+                    request.setAttribute("info", "Нет такого пользователя!");
+                    regUser = userFacade.findByLogin(login);
+                    if (regUser == null) {
+                        request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                                    .forward(request, response);
+                        break;
+                    }
+                    salts = regUser.getSalts();
+                    String encriptPass = ep.setEncriptPass(password, salts);
+                    if (encriptPass.equals(regUser.getPassword())) {
+                        session = request.getSession(true);
+                        session.setAttribute("regUser", regUser);
+                        request.setAttribute("info", "Привет " + regUser.getName()
+                                    + "! Вы вошли в систему.");
+                        request.getRequestDispatcher("/welcome")
+                                    .forward(request, response);
+                        break;
+                    }
+                    request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                                .forward(request, response);
+                    break;
+                case "/showLogin":
+                    request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+                                .forward(request, response);
+                    break;
+                case "/logout":
+                    if (session != null) {
+                        session.invalidate();
+                        request.setAttribute("info", "Вы вышли из системы");
+                    }
+                    request.getRequestDispatcher(PageReturner.getPage("index"))
+                                .forward(request, response);
+                    break;
+                case "/newUser":
+                    request.getRequestDispatcher(PageReturner.getPage("newUser"))
+                                .forward(request, response);
+                    break;
+                case "/addUser": {
+                    String name = request.getParameter("name");
+                    String surname = request.getParameter("surname");
+                    String phone = request.getParameter("phone");
+                    String city = request.getParameter("city");
+                    login = request.getParameter("login");
+                    String password1 = request.getParameter("password1");
+                    String password2 = request.getParameter("password2");
+                    if (!password1.equals(password2)) {
+                        request.setAttribute("info", "Неправильно введен логин или пароль");
+                        request.getRequestDispatcher(PageReturner.getPage("newUser"))
+                                    .forward(request, response);
+                        break;
+                    }
+////            ep = new EncriptPass();
+                    salts = ep.createSalts();
+                    encriptPass = ep.setEncriptPass(password1, salts);
+                    User user = new User(name, surname, phone, city, login,
+                                encriptPass, salts);
+                    userFacade.create(user);
+                    Role role = roleFacade.findRoleByName("USER");
+                    UserRoles ur = new UserRoles(user, role);
+                    userRolesFacade.create(ur); 
+                    session = request.getSession(true);
+                    session.setAttribute("regUser", user);// не только зарегистрировался, но и сразу вошел
+                    request.setAttribute("user", user);
+                    request.getRequestDispatcher("/welcome")//отправляется на Контроллер, который определяет, куда направить его дальше
+                                .forward(request, response);
+                    break;
+                }
             }
-            salts = regUser.getSalts();
-            String encriptPass = ep.setEncriptPass(password, salts);
-            if(encriptPass.equals(regUser.getPassword())){
-                session = request.getSession(true);
-                session.setAttribute("regUser", regUser);
-                request.setAttribute("info", "Привет " + regUser.getName()
-                        +"! Вы вошли в систему.");
-                request.getRequestDispatcher("/welcome")
-                        .forward(request, response);
-                break;
-            }
-            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                    .forward(request, response);
-            break;
-        case "/showLogin":
-            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
-                    .forward(request, response);
-            break;
-        case "/logout":
-            if(session != null){
-                session.invalidate();
-                request.setAttribute("info", "Вы вышли из системы");
-            }
-            request.getRequestDispatcher(PageReturner.getPage("welcome"))
-                    .forward(request, response);
-            break;
-        case "/newUser":
-            request.getRequestDispatcher(PageReturner.getPage("newUser")).forward(request, response);
-            break;
-        case "/addUser":{
-            String name = request.getParameter("name");
-            String surname = request.getParameter("surname");
-            String phone = request.getParameter("phone");
-            String city = request.getParameter("city");
-            login = request.getParameter("login");
-            String password1 = request.getParameter("password1");
-            String password2 = request.getParameter("password2");
-            if(!password1.equals(password2)){
-              request.setAttribute("info", "Неправильно введен логин или пароль");  
-              request.getRequestDispatcher(PageReturner.getPage("welcome"))
-                      .forward(request, response);
-              break;
-            }
-            ep = new EncriptPass();
-            salts = ep.createSalts();
-            encriptPass = ep.setEncriptPass(password1, salts);
-            User user = new User(name, surname, phone, city, login, 
-                    encriptPass,salts);
-            userFacade.create(user);
-            request.setAttribute("user", user);
-            request.getRequestDispatcher(PageReturner.getPage("welcome"))
-                    .forward(request, response);
-                break;
-            }
-            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -167,7 +178,7 @@ public class SecureConroller extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+                throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -181,7 +192,7 @@ public class SecureConroller extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+                throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -194,5 +205,6 @@ public class SecureConroller extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
 
 }
