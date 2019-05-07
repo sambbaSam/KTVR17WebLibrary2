@@ -1,4 +1,4 @@
-<!--ne nuzna, t.k. admin imeet doctup k pravam DERECTORA b manegera--->
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package servlets;
 
 import entity.User;
@@ -19,22 +24,17 @@ import secure.UserRoles;
 import session.RoleFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
-import util.EncriptPass;
 import util.PageReturner;
 
 /**
  *
  * @author pupil
  */
-@WebServlet(name = "AdminController", urlPatterns = {
-//    "/showUserRoles",
-//    "/changeUserRole",
-//  
-    "/showCangePassword",
-    "/changePassword",
-    
+@WebServlet(name = "DirectorController", urlPatterns = {
+    "/showUserRoles",
+    "/changeUserRole"
 })
-public class AdminController extends HttpServlet {
+public class DirectorController extends HttpServlet {
 
     @EJB
     UserFacade userFacade;
@@ -73,7 +73,7 @@ public class AdminController extends HttpServlet {
                         .forward(request, response);
             return;
         }
-        if (!sl.isRole(regUser, "ADMIN")) {
+        if (!sl.isRole(regUser, "DIRECTOR")) {
             request.setAttribute("info", "У вас нет прав доступа к ресурсу");
             request.getRequestDispatcher(PageReturner.getPage("showLogin"))
                         .forward(request, response);
@@ -84,39 +84,50 @@ public class AdminController extends HttpServlet {
         String path = request.getServletPath();
         switch (path) 
         {
-//---------------------------------------------------------------------------
-            case "/showCangePassword":
+            case "/showUserRoles":
+                Map<User, String> mapUsers = new HashMap<>();
                 List<User> listUsers = userFacade.findAll();
-               request.setAttribute("listUsers", listUsers);
-                request.getRequestDispatcher(PageReturner.getPage("showCangePassword"))
+                int n = listUsers.size();
+                for (int i = 0; i < n; i++) {
+                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                }
+                List<Role> listRoles = roleFacade.findAll();
+                request.setAttribute("mapUsers", mapUsers);
+                request.setAttribute("listRoles", listRoles);
+                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
                             .forward(request, response);
                 break;
-                //-----------------------------------------------------------------------------------------------
-              case "/changePassword":
-                  
-                String userId = request.getParameter("userId");
-                String password1 = request.getParameter("password1");
-                String password2 = request.getParameter("password2");
-                if (!password1.equals(password2)) {
-                        request.setAttribute("info", "Passwords no equals");
-                        request.getRequestDispatcher(PageReturner.getPage("showCangePassword"))
-                                    .forward(request, response);
-                        break;
-                    }
-                
-                EncriptPass ep = new EncriptPass();
-                String salts = ep.createSalts();
-                String encriptPass = ep.setEncriptPass(password1, salts);
+            case "/changeUserRole":
+                String setButton = request.getParameter("setButton");
+                String deleteButton = request.getParameter("deleteButton");
+                String userId = request.getParameter("user");
+                String roleId = request.getParameter("role");
                 User user = userFacade.find(new Long(userId));
-                
-                user.setPassword(encriptPass);
-                user.setSalts(salts);
-                userFacade.edit(user);
-                request.setAttribute("info", "Passwords is UPDATE");
-                request.getRequestDispatcher("/welcome")
+                Role roleToUser = roleFacade.find(new Long(roleId));
+                UserRoles ur = new UserRoles(user, roleToUser);
+                if (setButton != null) {
+                    sl.addRoleToUser(ur);
+                }
+                if (deleteButton != null) {
+                    sl.deleteRoleToUser(ur.getUser());
+                }
+                mapUsers = new HashMap<>();
+                listUsers = userFacade.findAll();
+                n = listUsers.size();
+                for (int i = 0; i < n; i++) {
+                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                }
+                request.setAttribute("mapUsers", mapUsers);
+                List<Role> newListRoles = roleFacade.findAll();
+                request.setAttribute("listRoles", newListRoles);
+                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
                             .forward(request, response);
-                break;//--------------------------------------------------------
-
+                break;
+                
+            default:
+                request.setAttribute("info", "Нат такой страницы");
+                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                break;
         }
     }
 

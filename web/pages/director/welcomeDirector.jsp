@@ -11,7 +11,7 @@
         <a href="showUsers">Список читателей</a><br>
         <a href="showTakeBook">Список выданных книг</a>
         <a href="library">Выдать книгу</a><br>
-        <a href="showUserRoles">Назначение ролей пользователям</a>----<a href="showCangePassword">Назначение novogo parolja</a>
+        <a href="showUserRoles">Назначение ролей пользователям</a>
         <br><br>
         Добавлена книга:  ${book.nameBook}, ${book.author}
         <hr>

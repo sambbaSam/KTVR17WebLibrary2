@@ -52,11 +52,25 @@ public class SecureConroller extends HttpServlet {
             ur.setUser(user);
             ur.setRole(role);
             userRolesFacade.create(ur);
+            
+//            ep.setEncriptPass("director", salts);
+//            User user1 = new User("Genry", "Ford",
+//                        "454545454", "Micigan", "director", encriptPass, salts);
+            role.setName("DIRECTOR");  //присвоение роли админу - DIRECTOR
+            roleFacade.create(role);
+            ur.setUser(user);
+            ur.setRole(role);
+            userRolesFacade.create(ur);
+            
+//            ep.setEncriptPass("director", salts);
+//            User user2 = new User("Anna", "Nicson",
+//                        "454545454", "Moskaw", "director", encriptPass, salts);
             role.setName("MANAGER"); //присвоение роли админу - MANAGER
             roleFacade.create(role);
             ur.setUser(user);
             ur.setRole(role);
             userRolesFacade.create(ur);
+            
             role.setName("USER");   //присвоение роли админу - USER
             roleFacade.create(role);
             ur.setUser(user);
@@ -143,11 +157,11 @@ public class SecureConroller extends HttpServlet {
                     String password2 = request.getParameter("password2");
                     if (!password1.equals(password2)) {
                         request.setAttribute("info", "Неправильно введен логин или пароль");
-                        request.getRequestDispatcher(PageReturner.getPage("newUser"))
+                        request.getRequestDispatcher(PageReturner.getPage("newUser"))//'welcomeUser'
                                     .forward(request, response);
                         break;
                     }
-////            ep = new EncriptPass();
+                    ep = new EncriptPass();
                     salts = ep.createSalts();
                     encriptPass = ep.setEncriptPass(password1, salts);
                     User user = new User(name, surname, phone, city, login,

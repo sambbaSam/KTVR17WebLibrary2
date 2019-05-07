@@ -37,7 +37,7 @@ public class UserController extends HttpServlet {
         HttpSession session = request.getSession(false);
         SecureLogic sl = new SecureLogic();
         User regUser = null;
-        //---------защита ресурса - проверка, что пользователь зарегистрирован - USER, войти может и ADMIN
+        //---------защита ресурса - проверка, что пользователь зарегистрирован - USER, войти может и ADMIN, and DIRECTOR
         if(session != null){
             try {
                 regUser = (User) session.getAttribute("regUser");
