@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import entity.User;
@@ -38,8 +33,8 @@ public class DirectorController extends HttpServlet {
 
     @EJB
     UserFacade userFacade;
-    @EJB
-    UserRolesFacade userRolesFacade;
+//    @EJB
+//    UserRolesFacade userRolesFacade;
     @EJB
     RoleFacade roleFacade;
 
@@ -79,19 +74,25 @@ public class DirectorController extends HttpServlet {
                         .forward(request, response);
             return;
         }
-        //----------------------------------------------------------
-
         String path = request.getServletPath();
         switch (path) 
         {
             case "/showUserRoles":
-                Map<User, String> mapUsers = new HashMap<>();
+                Map<User,String> mapUsers = new HashMap<>();
                 List<User> listUsers = userFacade.findAll();
                 int n = listUsers.size();
                 for (int i = 0; i < n; i++) {
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+//                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                        if(!"ADMIN".equals(sl.getRole(listUsers.get(i)))){
+                        mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                    }
                 }
                 List<Role> listRoles = roleFacade.findAll();
+                for(int i=0;i<listRoles.size();i++){
+                    if("ADMIN".equals(listRoles.get(i).getName())){
+                        listRoles.remove(i);
+                    }
+                }
                 request.setAttribute("mapUsers", mapUsers);
                 request.setAttribute("listRoles", listRoles);
                 request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
@@ -103,31 +104,28 @@ public class DirectorController extends HttpServlet {
                 String userId = request.getParameter("user");
                 String roleId = request.getParameter("role");
                 User user = userFacade.find(new Long(userId));
-                Role roleToUser = roleFacade.find(new Long(roleId));
-                UserRoles ur = new UserRoles(user, roleToUser);
-                if (setButton != null) {
-                    sl.addRoleToUser(ur);
+                if(roleId != null){
+                    Role roleToUser = roleFacade.find(new Long(roleId));
+                    if("ADMIN".equals(roleToUser.getName())){
+                        request.getRequestDispatcher("/showUserRoles").forward(request, response);
+                        break;
+                    }
+                    UserRoles ur = new UserRoles(user, roleToUser);
+                    if(setButton != null){
+                        sl.addRoleToUser(ur);
+                    }
                 }
                 if (deleteButton != null) {
-                    sl.deleteRoleToUser(ur.getUser());
+                    sl.deleteRoleToUser(user);//sl.deleteRoleToUser(ur.getUser());
                 }
-                mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();
-                n = listUsers.size();
-                for (int i = 0; i < n; i++) {
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-                }
-                request.setAttribute("mapUsers", mapUsers);
-                List<Role> newListRoles = roleFacade.findAll();
-                request.setAttribute("listRoles", newListRoles);
-                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
-                            .forward(request, response);
+                request.getRequestDispatcher("/showUserRoles")  // !!!!!!!!!!!!!!!???????????????
+                        .forward(request, response);
+                break;
+            default:
+                request.setAttribute("info", "Нет такой станицы!");
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
                 
-            default:
-                request.setAttribute("info", "Нат такой страницы");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
-                break;
         }
     }
 

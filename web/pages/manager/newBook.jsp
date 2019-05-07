@@ -23,9 +23,14 @@
                 Количество экземпрляров:<br>
                 <input type="text" id="count" name="count"><br>
                 <br>
+                <select name="coverId">
+                <c:forEach var="cover" items="${listCovers}">
+                    <option value="${cover.id}">${cover.name}</option>
+                </c:forEach>
+            </select>
+            <br>
                 <input type="submit" value="Добавить">
             </form><br>
-            
             <p><button><a href="welcome">Home</a></button></p>
             <script src="${pageContext.request.contextPath}/js/newBook.js"></script>
         </div>

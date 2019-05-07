@@ -3,6 +3,7 @@
 <div class ="colorBack">
     <h1>Добро пожаловать в нашу библиотеку</h1>
     <h3><a href="showLogin">Войти в систему</a></h3><br>
+    OR
     <h3><a href="newUser">зарегистрироваться</a></h3>
     ${info}<br>
 

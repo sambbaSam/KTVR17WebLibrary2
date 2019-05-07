@@ -2,6 +2,7 @@
 package servlets;
 
 import entity.Book;
+import entity.BookCover;
 import entity.User;
 import java.io.IOException;
 import java.util.List;
@@ -13,14 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import secure.SecureLogic;
+import session.BookCoverFacade;
 import session.BookFacade;
 import util.PageReturner;
 
 @WebServlet(name = "UserController", urlPatterns = {
-"/showBooks"
+"/showBooks",
+"/showBook"
 })
 public class UserController extends HttpServlet {
 @EJB BookFacade bookFacade;
+@EJB BookCoverFacade bookCoverFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -59,18 +63,23 @@ public class UserController extends HttpServlet {
             }
         //----------------------------------------------------------------------
         String path = request.getServletPath();
-        switch(path){
-        case "/showBooks":
-            List<Book> listBooks = bookFacade.findActived(true);
-            request.setAttribute("role", sl.getRole(regUser));
-            request.setAttribute("listBooks", listBooks);
-            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
+         switch (path) {
+            case "/showBooks":
+                List<Book> listBooks = bookFacade.findActived(true);
+                request.setAttribute("role", sl.getRole(regUser));
+                request.setAttribute("listBooks", listBooks);
+                request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
                 break;
-                default:
-                request.setAttribute("info", "Нат такой страницы");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
-            break;
-            }          
+            case "/showBook":
+                String bookId = request.getParameter("bookId");
+                Book book = bookFacade.find(new Long(bookId));
+                BookCover bookCover = bookCoverFacade.findByBook(book);
+                break;
+            default:
+                request.setAttribute("info", "Нет такой станицы!");
+                request.getRequestDispatcher("/welcome").forward(request, response);
+                break;
+        }       
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

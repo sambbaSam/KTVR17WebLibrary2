@@ -15,5 +15,5 @@
         Добавлена книга:  ${book.nameBook}, ${book.author}
         <hr>
         Добавлен читатель:   ${user.name}, ${user.surname}
-        
+        <p><button><a href="welcome">Home</a></button></p>
   </div>     

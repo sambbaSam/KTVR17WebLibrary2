@@ -56,28 +56,28 @@ public class WelcomeController extends HttpServlet {
             request.setAttribute("info", "Вы вошли как АДМИН");
             request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
                         .forward(request, response);
-            return;
+        //    return;
         } else 
             if (sl.isRole(regUser, "DIRECTOR")) {
             request.setAttribute("info", "Вы вошли как "  + regUser.getName());
             request.getRequestDispatcher(PageReturner.getPage("welcomeDirector"))
                         .forward(request, response);
-            return;
+        //    return;
         } else if (sl.isRole(regUser, "MANAGER")) {
             request.setAttribute("info", "Вы вошли как "  + regUser.getName());
             request.getRequestDispatcher(PageReturner.getPage("welcomeManager"))
                         .forward(request, response);
-            return;
+         //   return;
         }else if (sl.isRole(regUser, "USER")) {
             request.setAttribute("info", "Вы вошли как "  + regUser.getName());
             request.getRequestDispatcher(PageReturner.getPage("welcomeUser"))
                         .forward(request, response);
-            return;
+        //    return;
         } else {
             request.setAttribute("info", "Войти или зарегистрироваться");
             request.getRequestDispatcher(PageReturner.getPage("index"))
                         .forward(request, response);
-            return;
+        //    return;
         }
 
     }

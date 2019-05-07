@@ -1,6 +1,8 @@
 package servlets;
 
 import entity.Book;
+import entity.BookCover;
+import entity.Cover;
 import entity.History;
 import entity.User;
 import java.io.IOException;
@@ -15,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import secure.SecureLogic;
+import session.BookCoverFacade;
 import session.BookFacade;
+import session.CoverFacade;
 import session.HistoryFacade;
 import session.RoleFacade;
 import session.UserFacade;
@@ -30,21 +34,17 @@ import util.PageReturner;
     "/takeBook",
     "/showTakeBook",
     "/returnBook",
-    "/deleteBook", //    "/showUserRoles",
-//    "/changeUserRole"
+    "/deleteBook", 
+    "/showUploadFile"
 })
 public class ManagerController extends HttpServlet {
 
-    @EJB
-    BookFacade bookFacade;
-    @EJB
-    UserFacade userFacade;
-    @EJB
-    HistoryFacade historyFacade;
-    @EJB
-    UserRolesFacade userRolesFacade;
-    @EJB
-    RoleFacade roleFacade;
+    @EJB BookFacade bookFacade;
+    @EJB UserFacade userFacade;
+    @EJB HistoryFacade historyFacade;
+    @EJB CoverFacade coverFacade;
+    @EJB RoleFacade roleFacade;
+    @EJB BookCoverFacade bookCoverFacade;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
@@ -85,19 +85,20 @@ public class ManagerController extends HttpServlet {
                 String yearPublished = request.getParameter("yearPublished");
                 String isbn = request.getParameter("isbn");
                 String countStr = request.getParameter("count");
+                String coverId = request.getParameter("coverId");
+                Cover cover = coverFacade.find(new Long(coverId));
                 Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
                 bookFacade.create(book);
+                BookCover bookCover = new BookCover(book, cover);
+                bookCoverFacade.create(bookCover);
                 request.setAttribute("book", book);
-                request.getRequestDispatcher(PageReturner.getPage("/welcome")).forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
             }
-//        case "/showBooks":{
-//            List<Book> listBooks = bookFacade.findActived(true);
-//            request.setAttribute("role", sl.getRole(regUser));
-//            request.setAttribute("listBooks", listBooks);
-//            request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-//                break;
-//            }
+            case "/showUploadFile":
+                request.getRequestDispatcher(PageReturner.getPage("showUploadFile"))
+                        .forward(request, response);
+                break;
             case "/showUsers":
                 List<User> listUsers = userFacade.findAll();
                 request.setAttribute("listUsers", listUsers);
@@ -160,45 +161,6 @@ public class ManagerController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
                 break;
             }
-//        case "/showUserRoles":
-//            Map<User,String> mapUsers = new HashMap<>();
-//            listUsers = userFacade.findAll();
-//            int n = listUsers.size();
-//            for(int i=0;i<n;i++){
-//                mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-//            }
-//            List<Role> listRoles = roleFacade.findAll();
-//            request.setAttribute("mapUsers", mapUsers);
-//            request.setAttribute("listRoles", listRoles);
-//            request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
-//                    .forward(request, response);
-//            break;
-//        case "/changeUserRole":
-//            String setButton = request.getParameter("setButton");
-//            String deleteButton = request.getParameter("deleteButton");
-//            String userId = request.getParameter("user");
-//            String roleId = request.getParameter("role");
-//            User user = userFacade.find(new Long(userId));
-//            Role roleToUser = roleFacade.find(new Long(roleId));
-//            UserRoles ur = new UserRoles(user, roleToUser);
-//            if(setButton != null){
-//                sl.addRoleToUser(ur);
-//            }
-//            if(deleteButton != null){
-//                sl.deleteRoleToUser(ur.getUser());
-//            }
-//            mapUsers = new HashMap<>();
-//            listUsers = userFacade.findAll();   
-//            n = listUsers.size();
-//            for(int i=0;i<n;i++){
-//                mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-//            }
-//            request.setAttribute("mapUsers", mapUsers);
-//            List<Role> newListRoles = roleFacade.findAll();
-//            request.setAttribute("listRoles", newListRoles);
-//            request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
-//                    .forward(request, response);
-//            break;      
             default:
                 request.setAttribute("info", "Нат такой страницы");
                 request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);

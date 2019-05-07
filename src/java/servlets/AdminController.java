@@ -2,10 +2,7 @@ package servlets;
 
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,35 +10,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import secure.Role;
 import secure.SecureLogic;
-import secure.UserRoles;
 import session.RoleFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
 import util.EncriptPass;
 import util.PageReturner;
-
 /**
  *
  * @author pupil
  */
-@WebServlet(name = "AdminController", urlPatterns = {
-//    "/showUserRoles",
-//    "/changeUserRole",
-//  
+@WebServlet(name = "AdminController", urlPatterns = { 
     "/showCangePassword",
     "/changePassword",
     
 })
 public class AdminController extends HttpServlet {
 
-    @EJB
-    UserFacade userFacade;
-    @EJB
-    UserRolesFacade userRolesFacade;
-    @EJB
-    RoleFacade roleFacade;
+    @EJB UserFacade userFacade;
+//    @EJB UserRolesFacade userRolesFacade;
+    @EJB RoleFacade roleFacade;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -79,42 +67,30 @@ public class AdminController extends HttpServlet {
                         .forward(request, response);
             return;
         }
-        //----------------------------------------------------------
-
         String path = request.getServletPath();
         switch (path) 
         {
-//---------------------------------------------------------------------------
             case "/showCangePassword":
                 List<User> listUsers = userFacade.findAll();
                request.setAttribute("listUsers", listUsers);
                 request.getRequestDispatcher(PageReturner.getPage("showCangePassword"))
                             .forward(request, response);
                 break;
-                //-----------------------------------------------------------------------------------------------
               case "/changePassword":
-                  
                 String userId = request.getParameter("userId");
-                String password1 = request.getParameter("password1");
-                String password2 = request.getParameter("password2");
-                if (!password1.equals(password2)) {
-                        request.setAttribute("info", "Passwords no equals");
-                        request.getRequestDispatcher(PageReturner.getPage("showCangePassword"))
-                                    .forward(request, response);
-                        break;
-                    }
-                
+                String newpassword = request.getParameter("newpassword");
+                User user = userFacade.find(new Long(userId));
                 EncriptPass ep = new EncriptPass();
                 String salts = ep.createSalts();
-                String encriptPass = ep.setEncriptPass(password1, salts);
-                User user = userFacade.find(new Long(userId));
-                
+                String encriptPass = ep.setEncriptPass(newpassword, salts);
                 user.setPassword(encriptPass);
                 user.setSalts(salts);
                 userFacade.edit(user);
-                request.setAttribute("info", "Passwords is UPDATE");
-                request.getRequestDispatcher("/welcome")
-                            .forward(request, response);
+                request.setAttribute("info", "Пароль изменен!");
+                listUsers = userFacade.findAll();
+                request.setAttribute("listUsers", listUsers);
+                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
+                        .forward(request, response);
                 break;//--------------------------------------------------------
 
         }

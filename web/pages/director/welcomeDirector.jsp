@@ -13,8 +13,6 @@
         <a href="library">Выдать книгу</a><br>
         <a href="showUserRoles">Назначение ролей пользователям</a>
         <br><br>
-        Добавлена книга:  ${book.nameBook}, ${book.author}
-        <hr>
-        Добавлен читатель:   ${user.name}, ${user.surname}
+       <p><button><a href="welcome">Home</a></button></p>
         
   </div>     
