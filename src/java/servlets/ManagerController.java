@@ -35,7 +35,8 @@ import util.PageReturner;
     "/showTakeBook",
     "/returnBook",
     "/deleteBook", 
-    "/showUploadFile"
+    "/showUploadFile",
+    "/showAddNewBook"
 })
 public class ManagerController extends HttpServlet {
 
@@ -77,6 +78,8 @@ public class ManagerController extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/newBook":
+                List<Cover> listCovers = coverFacade.findAll();
+                request.setAttribute("listCovers", listCovers);
                 request.getRequestDispatcher(PageReturner.getPage("newBook")).forward(request, response);
                 break;
             case "/addBook": {
@@ -109,6 +112,7 @@ public class ManagerController extends HttpServlet {
                 if (listBooks != null) {
                     request.setAttribute("listBooks", listBooks);
                 }
+//                List<User> listUsers = userFacade.findActived(true);
                 request.setAttribute("listUsers", userFacade.findAll());
                 request.getRequestDispatcher(PageReturner.getPage("takeBook")).forward(request, response);
                 break;
@@ -118,11 +122,16 @@ public class ManagerController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("listTakeBook")).forward(request, response);
                 break;
             }
+//            case "/showAddNewBook": {
+//                List<History> takeBooks = historyFacade.findTakeBooks();
+//                request.setAttribute("takeBooks", takeBooks);
+//                request.getRequestDispatcher(PageReturner.getPage("listTakeBook")).forward(request, response);
+//                break;
+//            }
             case "/takeBook": {
                 String selectedBook = request.getParameter("selectedBook");
                 String selectedUser = request.getParameter("selectedUser");
                 Book book = bookFacade.find(new Long(selectedBook));
-
                 User user = userFacade.find(new Long(selectedUser));
                 Calendar c = new GregorianCalendar();
                 if (book.getCount() > 0) {

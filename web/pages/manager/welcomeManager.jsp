@@ -9,7 +9,8 @@
         <a href="showBooks">Список книг</a><br>
         <a href="newBook">добавить книгу</a><br>
         <a href="showUsers">Список читателей</a><br>
-        <a href="showTakeBook">Список выданных книг</a>
+        <a href="showTakeBook">Список выданных книг</a><br>
+        <hr>-----------------
         <a href="library">Выдать книгу</a><br>
         <br><br>
         Добавлена книга:  ${book.nameBook}, ${book.author}

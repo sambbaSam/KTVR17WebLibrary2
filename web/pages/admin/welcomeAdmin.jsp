@@ -9,7 +9,7 @@
         <a href="showBooks">Список книг</a><br>
         <a href="newBook">добавить книгу</a><br>
         <a href="showUsers">Список читателей</a><br>
-        <a href="showTakeBook">Список выданных книг</a>
+        <a href="showTakeBook">Список выданных книг</a><br>
         <a href="library">Выдать книгу</a><br>
         <a href="showUserRoles">Назначение ролей пользователям</a><br>
         <a href="showCangePassword">Измененить пароля пользователю</a>

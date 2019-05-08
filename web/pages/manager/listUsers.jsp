@@ -11,7 +11,7 @@
         <ul>
             <c:forEach var="user" items="${listUsers}">
                 <li>${user.name} ${user.surname}</li>
-                </c:forEach>
+            </c:forEach>
         </ul>
         <p><button><a href="welcome">Home</a></button></p>
     </body>
