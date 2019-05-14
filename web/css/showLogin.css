@@ -1,16 +1,10 @@
-h1{
-    color:black;
-}
-h2{
-    color:fuchsia;
-}
-h3{
-    color:blue;
-}
-.invalid{
-    border: 1px solid #f60;
-}
+
 .colorBack {
-    background-color: antiquewhite; 
-    margin-left: 300 px;
+    background-color: beige; 
+    padding: 20px;
+}
+
+.reg{
+    align-items: center; 
+    padding: 50px;
 }

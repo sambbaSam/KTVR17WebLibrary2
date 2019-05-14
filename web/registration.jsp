@@ -8,7 +8,8 @@
     </head>
     <body>
         <div class ="colorBack">
-        <h3>Регистрация нового читателя</h3>
+        <h2>Регистрация нового читателя</h2>
+        <div class="row justify-content-center">
         <form action="addUser" method="POST" name="form1" id="_form1">
              Имя:<br>
             <input type="text" name="name"><br>
@@ -31,6 +32,7 @@
             <input type="submit" value="Добавить">
         </form>
         <p><button><a href="welcome">Home</a></button></p>
+        </div>
         </div>
     </body>
 </html>

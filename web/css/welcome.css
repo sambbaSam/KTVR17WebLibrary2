@@ -1,8 +1,10 @@
 h1{
     color:black;
+    text-align: center;
 }
 h2{
     color:fuchsia;
+    text-align: center;
 }
 h3{
     color:blue;
@@ -10,6 +12,25 @@ h3{
 .invalid{
     border: 1px solid #f60;
 }
+body{
+   background-color:bisque;
+   
+}
+.info{
+    text-align: center;
+    color: black;
+    font-size: 14px;
+    font-family: bold;
+    padding: 20px;
+}
+.reg{
+    align-items: center; 
+    padding: 50px;
+}
 .colorBack {
     background-color: peru ;
+    padding: 20px;
+}
+input{
+    width: 300px;
 }
