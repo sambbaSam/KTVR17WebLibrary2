@@ -7,6 +7,7 @@
         <title>Книги</title>
     </head>
     <body>
+         <link rel="stylesheet" href="css/"
         <h1>Описание книги</h1>
         Обложка книги: <br>
         <img src="insertFile/${bookCover.cover.name}"><br>

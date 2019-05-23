@@ -5,13 +5,13 @@
     <head>
        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/newBook.css">
-        <link rel="stylesheet" href="css/newBook.css">    
+        <!--<link rel="stylesheet" href="css/newBook.css">-->    
         <title>Новая книга</title>
     </head>
     <body>
         <div class ="colorBack">
             <h2>Добавляем в библиотеку новую книгу</h2>
-            <a href="showUploadFile" >Zagruzit  pilt</a>
+            <a href="showUploadFile" >Загрузить изображение обложки</a><br>
             <form action="addBook" method="POST" name="form1" onsubmit="return validate();" id="form1">
                 Название:<br>
                 <input type="text" id="nameBook" name="nameBook"><br>
@@ -23,6 +23,7 @@
                 <input type="text" id="isbn" name="isbn"><br>
                 Количество экземпрляров:<br>
                 <input type="text" id="count" name="count"><br>
+                
                 <br>
                     <select name="coverId">
                     <c:forEach var="cover" items="${listCovers}">
@@ -32,6 +33,7 @@
                 <br>
                 <input type="submit" value="Добавить">
             </form><br>
+            
             <p><button><a href="welcome">Home</a></button></p>
             <script src="${pageContext.request.contextPath}/js/newBook.js"></script>
         </div>

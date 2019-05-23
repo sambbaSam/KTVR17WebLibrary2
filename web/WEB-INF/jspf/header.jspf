@@ -8,4 +8,4 @@
         <title>Library</title>
     </head>
     <body>
-        <div class="container">
+        <div class="container row justify-content-center offset-2">
